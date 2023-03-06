@@ -28,8 +28,6 @@ if [ -n "$AWS_S3_ENDPOINT" ]; then
 fi
 
 # Create a dedicated profile for this action to avoid conflicts
-# with past/future actions.
-# https://github.com/jakejarvis/s3-sync-action/issues/1
 aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
 ${AWS_ACCESS_KEY_ID}
 ${AWS_SECRET_ACCESS_KEY}
@@ -39,7 +37,7 @@ EOF
 
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
-sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
+sh -c "aws s3 sync s3://${AWS_S3_BUCKET} ${DEST_DIR} \
               --profile s3-sync-action \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
